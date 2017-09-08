@@ -6,6 +6,15 @@ program DYE;
 
 uses
   System.SysUtils,
+<<<<<<< HEAD
+=======
+  MARS.Core.Engine,
+  MARS.http.Server.Indy,
+  DYE.Ressources in 'DYE.Ressources.pas';
+
+var FEngine: TMARSEngine;
+    FServer: TMARSIndyServer;
+>>>>>>> 375e5ed7f09b2c1de40c4faad1ef7f6f60e39c4b
 
   MARS.HTTP.Server.Indy,
   MARS.Core.Engine,
@@ -51,8 +60,14 @@ var
   Server: TServer;
 begin
   try
+<<<<<<< HEAD
     Server := TServer.Create;
     while true do;
+=======
+    FEngine := TMARSEngine.Create;
+    FEngine.Parameters.Values['Port'] := 80;
+    FEngine.Parameters.Values['ThreadPoolSize'] := 2;
+>>>>>>> 375e5ed7f09b2c1de40c4faad1ef7f6f60e39c4b
   except
     on E: Exception do
       Writeln(E.ClassName, ': ', E.Message);

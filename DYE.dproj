@@ -92,7 +92,11 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+<<<<<<< HEAD
         <DCCReference Include="src\DYE.Resources.pas"/>
+=======
+        <DCCReference Include="DYE.Ressources.pas"/>
+>>>>>>> 375e5ed7f09b2c1de40c4faad1ef7f6f60e39c4b
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
