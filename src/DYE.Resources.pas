@@ -44,10 +44,8 @@ begin
      if not Assigned(ScenarioResult) then
        Result := '{"empty":"true"}'
      else
-     Result := '';
+     Result := ScenarioResult.ToString;
    finally
-     if Assigned(GVRequ) then
-       FreeAndNil(GVRequ);
      if Assigned(ScenarioResult) then
        FreeAndNil(ScenarioResult);
    end;
@@ -65,7 +63,7 @@ begin
     if not Assigned(ScenarioResult) then
      Result := '{"empty":"true"}'
     else
-      Result := 'Yep';
+      Result := ScenarioResult.ToString;
   finally
      FreeAndNil(LexReq);
      if Assigned(ScenarioResult) then
