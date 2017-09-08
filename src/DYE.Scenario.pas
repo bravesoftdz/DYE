@@ -28,7 +28,19 @@ type
      function GiveScenario(ScenarioType: TDYELexScenarioType): IScenario;
      procedure RegisterScenario(ScenarioType: TDYELexScenarioType; Scenario: IScenario);
   end;
+
+  function GlobalScenarioSelector: TScenarioSelector;
+
 implementation
+
+var GScenarioSelector: TScenarioSelector;
+
+function GlobalScenarioSelector: TScenarioSelector;
+begin
+  if not Assigned(GScenarioSelector) then
+    GScenarioSelector := TScenarioSelector.Create;
+  Result := GScenarioSelector;
+end;
 
 function TScenarioSelector.GiveScenario(ScenarioType: TDYELexScenarioType): IScenario;
 begin

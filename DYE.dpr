@@ -13,7 +13,9 @@ uses
   DYE.Request.GoogleVision in 'src\DYE.Request.GoogleVision.pas',
   DYE.Request.AmazonLex in 'src\DYE.Request.AmazonLex.pas',
   DYE.WaitStorage in 'src\DYE.WaitStorage.pas',
-  DYE.Scenario in 'src\DYE.Scenario.pas';
+  DYE.Scenario in 'src\DYE.Scenario.pas',
+  DYE.Scenarios.Pricing in 'src\DYE.Scenarios.Pricing.pas',
+  DYE.Scenarios.WTF in 'src\DYE.Scenarios.WTF.pas';
 
 type
   TServer = class
