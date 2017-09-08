@@ -28,10 +28,10 @@ type
   private
     FResponse: TDYEGoogleVisionResponse;
   protected
-    function Process(ARespone: TStream): TDYEGoogleVisionResponse;
-    function Request(AGraphic: TStream): TStream;
+    function Process(ARespone: TStringStream): TDYEGoogleVisionResponse;
+    function Request(AGraphic: TBytesStream): TStringStream;
   public
-    constructor Create(AGraphic: TStream);
+    constructor Create(AGraphic: TBytesStream);
     destructor Destroy; override;
     property Response: TDYEGoogleVisionResponse read FResponse;
   end;
@@ -40,7 +40,7 @@ implementation
 
 { TDYEGoogleVisionRequest }
 
-constructor TDYEGoogleVisionRequest.Create(AGraphic: TStream);
+constructor TDYEGoogleVisionRequest.Create(AGraphic: TBytesStream);
 begin
   if not Assigned(AGraphic) then
   begin
@@ -59,22 +59,74 @@ begin
 end;
 
 function TDYEGoogleVisionRequest.Process(
-  ARespone: TStream): TDYEGoogleVisionResponse;
+  ARespone: TStringStream): TDYEGoogleVisionResponse;
 begin
   Result := TDYEGoogleVisionResponse.Create;
 end;
 
-function TDYEGoogleVisionRequest.Request(AGraphic: TStream): TStream;
+function TDYEGoogleVisionRequest.Request(AGraphic: TBytesStream): TStringStream;
+
+  function RequestBody: TStringStream;
+  var
+    StreamWriter: TStreamWriter;
+    JsonWriter: TJsonTextWriter;
+  begin
+    Result := TStringStream.Create;
+    StreamWriter := TStreamWriter.Create(Result);
+    try
+      JsonWriter := TJsonTextWriter.Create(StreamWriter);
+      try
+        JsonWriter.WriteStartObject;
+
+          JsonWriter.WritePropertyName('requests');
+          JsonWriter.WriteStartArray;
+
+            JsonWriter.WriteStartObject;
+
+              JsonWriter.WritePropertyName('image');
+              JsonWriter.WriteStartObject;
+
+                JsonWriter.WritePropertyName('content');
+                JsonWriter.WriteValue(AGraphic.Bytes);
+
+              JsonWriter.WriteEndObject;
+
+              JsonWriter.WritePropertyName('features');
+              JsonWriter.WriteStartArray;
+
+                JsonWriter.WriteStartObject;
+
+                  JsonWriter.WritePropertyName('type');
+                  JsonWriter.WriteValue('LABEL_DETECTION');
+
+                  JsonWriter.WritePropertyName('maxResults');
+                  JsonWriter.WriteValue(1);
+
+                JsonWriter.WriteEndObject;
+
+              JsonWriter.WriteEndArray;
+
+            JsonWriter.WriteEndObject;
+
+          JsonWriter.WriteEndArray;
+
+        JsonWriter.WriteEndObject;
+      finally
+        JsonWriter.Free;
+      end;
+    finally
+      StreamWriter.Free;
+    end;
+  end;
+
 var
   Client: TNetHTTPClient;
-  JsonWriter: TJsonWriter;
 begin
-  Result := TMemoryStream.Create;
+  Result := TStringStream.Create;
   try
     Client := TNetHTTPClient.Create(nil);
     try
-
-      Client.Post(TDYEGoogleVisionAPIData.Url, AGraphic, Result);
+      Client.Post(TDYEGoogleVisionAPIData.Url, RequestBody, Result);
     finally
       Client.Free;
     end;
