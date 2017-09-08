@@ -14,6 +14,7 @@ type
   TDYEGoogleVisionAPIData = packed record
   public
     const
+      Host = '';
       Key = 'AIzaSyDlPE7zDiXzSRt-OQpeq-E3x8bXTFcV16c';
   end;
 
@@ -25,8 +26,8 @@ type
   private
     FResponse: TDYEGoogleVisionResponse;
   protected
-    function Process(ARespone: String): TDYEGoogleVisionResponse;
-    function Request(AGraphic: TStream): String;
+    function Process(ARespone: TStream): TDYEGoogleVisionResponse;
+    function Request(AGraphic: TStream): TStream;
   public
     constructor Create(AGraphic: TStream);
     destructor Destroy; override;
@@ -59,14 +60,20 @@ function TDYEGoogleVisionRequest.Process(
 begin
 end;
 
-function TDYEGoogleVisionRequest.Request(AGraphic: TStream): String;
+function TDYEGoogleVisionRequest.Request(AGraphic: TStream): TStream;
 var
   Client: TNetHTTPClient;
 begin
-  Client := TNetHTTPClient.Create(nil);
+  Result := TMemoryStream.Create;
   try
+    Client := TNetHTTPClient.Create(nil);
+    try
+      Client.Post(TDYEGoogleVisionAPIData, AGraphic, Result);
+    finally
+      Client.Free;
+    end;
   finally
-    Client.Free;
+    Result.Free;
   end;
 end;
 
