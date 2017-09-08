@@ -6,6 +6,7 @@ uses
   System.SysUtils,
   System.Net.HttpClientComponent,
   System.Classes,
+  System.JSON.Writers,
   Vcl.Imaging.jpeg;
 
 type
@@ -14,11 +15,12 @@ type
   TDYEGoogleVisionAPIData = packed record
   public
     const
-      Host = '';
+      Host = 'https://vision.googleapis.com/v1/images:annotate';
       Key = 'AIzaSyDlPE7zDiXzSRt-OQpeq-E3x8bXTFcV16c';
+      Url = Host + '?key=' + Key;
   end;
 
-  TDYEGoogleVisionResponse = record
+  TDYEGoogleVisionResponse = class
 
   end;
 
@@ -53,22 +55,26 @@ end;
 
 destructor TDYEGoogleVisionRequest.Destroy;
 begin
+  Response.Free;
 end;
 
-function TDYEGoogleVisionRequest.Process(ARespone: TStream): TDYEGoogleVisionResponse;
+function TDYEGoogleVisionRequest.Process(
+  ARespone: TStream): TDYEGoogleVisionResponse;
 begin
-
+  Result := TDYEGoogleVisionResponse.Create;
 end;
 
 function TDYEGoogleVisionRequest.Request(AGraphic: TStream): TStream;
 var
   Client: TNetHTTPClient;
+  JsonWriter: TJsonWriter;
 begin
   Result := TMemoryStream.Create;
   try
     Client := TNetHTTPClient.Create(nil);
     try
-//      Client.Post(TDYEGoogleVisionAPIData, AGraphic, Result);
+
+      Client.Post(TDYEGoogleVisionAPIData.Url, AGraphic, Result);
     finally
       Client.Free;
     end;
