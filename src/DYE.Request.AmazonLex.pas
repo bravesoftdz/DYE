@@ -8,7 +8,7 @@ uses
 var Client: TNetHTTPCLient;
 
 type
-  TDYELexScenarioType=(stPrice, stWTF);
+  TDYELexScenarioType=(stPrice, stWTF, stNone);
 
   TDYEAmazonLexRequest = class
      public

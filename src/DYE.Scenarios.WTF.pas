@@ -18,6 +18,6 @@ end;
 
 initialization
 
-GlobalScenarioSelector.RegisterScenario(stPrice,TDYEWTFScenario.Create);
+GlobalScenarioSelector.RegisterScenario(stWTF,TDYEWTFScenario.Create);
 
 end.
