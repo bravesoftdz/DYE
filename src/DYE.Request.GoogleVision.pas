@@ -11,20 +11,27 @@ uses
 type
   EDYEGoogleVisionRequestError = class(Exception);
 
-  TDYEGoogleVisionResponse<T: TGraphic> = record
+  TDYEGoogleVisionAPIData = packed record
+  public
+    const
+      Key = 'AIzaSyDlPE7zDiXzSRt-OQpeq-E3x8bXTFcV16c';
+  end;
+
+  TDYEGoogleVisionResponse = record
 
   end;
 
   TDYEGoogleVisionCustomRequest<T: TGraphic> = class
   private
     FClient: TNetHTTPClient;
-    FData: TDYEGoogleVisionResponse<T>;
+    FData: TDYEGoogleVisionResponse;
   protected
     property Client: TNetHTTPClient read FClient;
+    function Request: String;
   public
     constructor Create(AGraphic: T);
     destructor Destroy;
-    property Response: TDYEGoogleVisionResponse<T> read FData;
+    property Response: TDYEGoogleVisionResponse read FData;
   end;
 
   { USE THIS TYPE FROM ABROAD! }
@@ -41,11 +48,17 @@ begin
     raise Exception.Create('Graphic object must not be NIL');
   end;
   FClient := TNetHTTPClient.Create(nil);
+  Request;
 end;
 
 destructor TDYEGoogleVisionCustomRequest<T>.Destroy;
 begin
   Client.Free;
+end;
+
+function TDYEGoogleVisionCustomRequest<T>.Request: String;
+begin
+
 end;
 
 end.
