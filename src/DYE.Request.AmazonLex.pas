@@ -3,7 +3,7 @@ unit DYE.Request.AmazonLex;
 interface
 
 uses
-  System.Net.HTTPClientComponent, DYE.WaitStorage;
+  System.Net.HTTPClientComponent, DYE.Scenario;
 
 var Client: TNetHTTPCLient;
 
