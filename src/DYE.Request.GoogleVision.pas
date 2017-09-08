@@ -229,7 +229,7 @@ constructor TDYEGoogleVisionEntity.Create(ADescription: String; AScore: Extended
 begin
   inherited Create;
   FDescription := ADescription;
-  if AScore >= 1 then
+  if AScore >= 1.0 then
   begin
     FScore := 1;
   end

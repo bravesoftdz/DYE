@@ -34,7 +34,7 @@ constructor TServer.Create;
 begin
   FEngine := TMARSEngine.Create;
   try
-    Engine.Port := 8066;
+    Engine.Port := 80;
     Engine.ThreadPoolSize := 4;
     Engine.AddApplication('DYE', '/dye',['DYE.Resources.*']);
     FServer := TMARShttpServerIndy.Create(Engine);

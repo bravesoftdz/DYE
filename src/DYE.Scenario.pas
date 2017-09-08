@@ -11,11 +11,10 @@ type
     private
     FTitle: string;
     FContent: string;
-    FImage: TGraphic;
     public
     property Title: string read FTitle write FTitle;
     property Content: string read FContent write FContent;
-    property Image: TGraphic read FImage write FImage;
+    function ToString: string;
   end;
 
   IScenario = interface
@@ -43,6 +42,12 @@ begin
   if not Assigned(GScenarioSelector) then
     GScenarioSelector := TScenarioSelector.Create;
   Result := GScenarioSelector;
+end;
+
+function TScenarioReturnData.ToString: string;
+begin
+  Result :=
+    '{"title":"' + Title + '","content":"' + Content + '"}';
 end;
 
 constructor TScenarioSelector.Create;
