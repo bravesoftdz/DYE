@@ -19,7 +19,7 @@ implementation
 
 function TDYEAmazonLexRequest.DoRequest(AReq: string): TDYELexScenarioType;
 begin
-
+  Result := stWTF;
 end;
 
 end.
