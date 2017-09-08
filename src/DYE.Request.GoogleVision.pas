@@ -55,9 +55,9 @@ destructor TDYEGoogleVisionRequest.Destroy;
 begin
 end;
 
-function TDYEGoogleVisionRequest.Process(
-  ARespone: String): TDYEGoogleVisionResponse;
+function TDYEGoogleVisionRequest.Process(ARespone: TStream): TDYEGoogleVisionResponse;
 begin
+
 end;
 
 function TDYEGoogleVisionRequest.Request(AGraphic: TStream): TStream;
@@ -68,7 +68,7 @@ begin
   try
     Client := TNetHTTPClient.Create(nil);
     try
-      Client.Post(TDYEGoogleVisionAPIData, AGraphic, Result);
+//      Client.Post(TDYEGoogleVisionAPIData, AGraphic, Result);
     finally
       Client.Free;
     end;
