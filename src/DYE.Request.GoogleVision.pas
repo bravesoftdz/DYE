@@ -9,6 +9,7 @@ uses
   System.Classes,
   System.JSON.Writers,
   System.JSON.Readers,
+  System.JSON.Types,
   Vcl.Imaging.jpeg;
 
 type
@@ -24,11 +25,11 @@ type
   TDYEGoogleVisionEntity = class
   private
     FDescription: String;
-    FScore: Extended;
+    FScore: Double;
   public
-    constructor Create(ADescription: String; AScore: Extended);
+    constructor Create(ADescription: String; AScore: Double);
     property Description: String read FDescription;
-    property Score: Extended read FScore;
+    property Score: Double read FScore;
   end;
 
   TDYEGoogleVisionResponse = class
@@ -84,9 +85,9 @@ var
   StreamReader: TStreamReader;
   JsonReader: TJsonTextReader;
   LogoDescription: String;
-  LogoScore: Extended;
+  LogoScore: Double;
   LabelDescription: String;
-  LabelScore: Extended;
+  LabelScore: Double;
 begin
   StreamReader := TStreamReader.Create(AResponse);
   try
@@ -96,28 +97,40 @@ begin
       begin
         if JsonReader.Path = 'responses[0].logoAnnotations[0].description' then
         begin
-          LogoDescription := JsonReader.Value.AsString;
-          Continue;
+          if JsonReader.TokenType = TJsonToken.String then
+          begin
+            LogoDescription := JsonReader.Value.AsString;
+            Continue;
+          end;
         end;
         if JsonReader.Path = 'responses[0].logoAnnotations[0].score' then
         begin
-          LogoScore := JsonReader.Value.AsExtended;
-          Continue;
+          if JsonReader.TokenType = TJsonToken.Float then
+          begin
+            LogoScore := JsonReader.Value.AsExtended;
+            Continue;
+          end;
         end;
-        if JsonReader.Path = 'responses[0].logoAnnotations[1].description' then
+        if JsonReader.Path = 'responses[0].labelAnnotations[0].description' then
         begin
-          LabelDescription := JsonReader.Value.AsString;
-          Continue;
+          if JsonReader.TokenType = TJsonToken.String then
+          begin
+            LabelDescription := JsonReader.Value.AsString;
+            Continue;
+          end;
         end;
-        if JsonReader.Path = 'responses[0].logoAnnotations[1].score' then
+        if JsonReader.Path = 'responses[0].labelAnnotations[0].score' then
         begin
-          LabelScore := JsonReader.Value.AsExtended;
-          Continue;
+          if JsonReader.TokenType = TJsonToken.Float then
+          begin
+            LabelScore := JsonReader.Value.AsExtended;
+            Continue;
+          end;
         end;
       end;
       FResponse := TDYEGoogleVisionResponse.Create
-        (TDYEGoogleVisionEntity.Create(LogoDescription, LogoScore), TDYEGoogleVisionEntity.Create(LabelDescription,
-        LabelScore));
+        (TDYEGoogleVisionEntity.Create(LogoDescription, LogoScore),
+        TDYEGoogleVisionEntity.Create(LabelDescription, LabelScore));
     finally
       JsonReader.Free;
     end;
@@ -149,7 +162,7 @@ function TDYEGoogleVisionRequest.Request(AGraphic: TBytesStream): TStringStream;
         JsonWriter.WriteStartObject;
 
         JsonWriter.WritePropertyName('content');
-        JsonWriter.WriteValue(AGraphic.Bytes);
+        JsonWriter.WriteValue(TEncoding.UTF8.GetString(AGraphic.Bytes));
 
         JsonWriter.WriteEndObject;
 
@@ -188,6 +201,7 @@ function TDYEGoogleVisionRequest.Request(AGraphic: TBytesStream): TStringStream;
       end;
     finally
       StreamWriter.Free;
+      Result.Position := 0;
     end;
   end;
 
@@ -203,7 +217,7 @@ begin
       Client.Free;
     end;
   finally
-    Result.Free;
+    Result.Position := 0;
   end;
 end;
 
@@ -225,7 +239,8 @@ end;
 
 { TDYEGoogleVisionEntity }
 
-constructor TDYEGoogleVisionEntity.Create(ADescription: String; AScore: Extended);
+constructor TDYEGoogleVisionEntity.Create(ADescription: String;
+  AScore: Double);
 begin
   inherited Create;
   FDescription := ADescription;
