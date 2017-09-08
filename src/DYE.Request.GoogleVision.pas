@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils,
   System.Net.HttpClientComponent,
-  Vcl.Graphics,
+  System.Classes,
   Vcl.Imaging.jpeg;
 
 type
@@ -21,44 +21,53 @@ type
 
   end;
 
-  TDYEGoogleVisionCustomRequest<T: TGraphic> = class
+  TDYEGoogleVisionRequest = class
   private
-    FClient: TNetHTTPClient;
-    FData: TDYEGoogleVisionResponse;
+    FResponse: TDYEGoogleVisionResponse;
   protected
-    property Client: TNetHTTPClient read FClient;
-    function Request: String;
+    function Process(ARespone: String): TDYEGoogleVisionResponse;
+    function Request(AGraphic: TStream): String;
   public
-    constructor Create(AGraphic: T);
-    destructor Destroy;
-    property Response: TDYEGoogleVisionResponse read FData;
+    constructor Create(AGraphic: TStream);
+    destructor Destroy; override;
+    property Response: TDYEGoogleVisionResponse read FResponse;
   end;
-
-  { USE THIS TYPE FROM ABROAD! }
-  TDYEGoogleVisionRequest = TDYEGoogleVisionCustomRequest<TJPEGImage>;
 
 implementation
 
 { TDYEGoogleVisionRequest }
 
-constructor TDYEGoogleVisionCustomRequest<T>.Create(AGraphic: T);
+constructor TDYEGoogleVisionRequest.Create(AGraphic: TStream);
 begin
   if not Assigned(AGraphic) then
   begin
     raise Exception.Create('Graphic object must not be NIL');
   end;
-  FClient := TNetHTTPClient.Create(nil);
-  Request;
+  if AGraphic.Size = 0 then
+  begin
+    raise Exception.Create('Graphic must not be empty');
+  end;
+  FResponse := Process(Request(AGraphic));
 end;
 
-destructor TDYEGoogleVisionCustomRequest<T>.Destroy;
+destructor TDYEGoogleVisionRequest.Destroy;
 begin
-  Client.Free;
 end;
 
-function TDYEGoogleVisionCustomRequest<T>.Request: String;
+function TDYEGoogleVisionRequest.Process(
+  ARespone: String): TDYEGoogleVisionResponse;
 begin
+end;
 
+function TDYEGoogleVisionRequest.Request(AGraphic: TStream): String;
+var
+  Client: TNetHTTPClient;
+begin
+  Client := TNetHTTPClient.Create(nil);
+  try
+  finally
+    Client.Free;
+  end;
 end;
 
 end.
