@@ -80,7 +80,7 @@ begin
       begin
         
       end;
-      FResponse := TDYEAmazonLexResponse.Create(stNone);
+      FResponse := TDYEAmazonLexResponse.Create(stWTF);
     finally
       JsonReader.Free;
     end;
