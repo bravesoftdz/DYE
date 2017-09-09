@@ -75,8 +75,8 @@ end;
 
 destructor TDYEGoogleVisionRequest.Destroy;
 begin
-  inherited;
   Response.Free;
+  inherited;
 end;
 
 function TDYEGoogleVisionRequest.Process(AResponse: TStringStream)
