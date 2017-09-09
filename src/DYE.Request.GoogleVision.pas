@@ -162,7 +162,7 @@ function TDYEGoogleVisionRequest.Request(AGraphic: TBytesStream): TStringStream;
         JsonWriter.WriteStartObject;
 
         JsonWriter.WritePropertyName('content');
-        JsonWriter.WriteValue(TEncoding.ANSI.GetString(AGraphic.Bytes));
+        JsonWriter.WriteValue(TEncoding.UTF8.GetString(AGraphic.Bytes));
 
         JsonWriter.WriteEndObject;
 
@@ -207,16 +207,12 @@ function TDYEGoogleVisionRequest.Request(AGraphic: TBytesStream): TStringStream;
 
 var
   Client: TNetHTTPClient;
-  Response: string;
 begin
   Result := TStringStream.Create;
   try
     Client := TNetHTTPClient.Create(nil);
     try
-      Writeln('Request google');
-      Response := Client.Post(TDYEGoogleVisionAPIData.Url, RequestBody, Result)
-                    .ContentAsString();
-      Writeln('Google ready');
+      Client.Post(TDYEGoogleVisionAPIData.Url, RequestBody, Result);
     finally
       Client.Free;
     end;
