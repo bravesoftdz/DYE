@@ -16,19 +16,17 @@ implementation
 
 function TDYEWTFScenario.DoScenario(AGoogleResponse: TDYEGoogleVisionResponse)
   : TScenarioReturnData;
-const
-  API_KEY = 'jEZTbYByKKmsh2k5GVnN85IRx5Yrp1gyoIwjsnSJ038XhuVKof';
-var
-  LLogo, LLabel, LWord: string;
-  URL: string;
-  Client: TNetHTTPClient;
-  Response: string;
-  ResponseJSON: TJSONObject;
-  Definitions: TJSONArray;
-  i: integer;
-  DefinitionObject: TJSONObject;
-  Definition: string;
-  DefinitionList: TList<string>;
+var Word: string;
+    URL: string;
+    Client: TNetHTTPClient;
+    Response: string;
+    ResponseJSON: TJSONObject;
+    Query: TJSONObject;
+    Pages: TJSONObject;
+    Page: TJSONObject;
+    i: integer;
+    DefinitionObject: TJSONObject;
+    Definition: string;
 begin
   if Assigned(AGoogleResponse.Logo) then
   begin
@@ -36,56 +34,28 @@ begin
     LWord := LLogo;
   end
   else
-    LWord := AGoogleResponse.&Label.Description;
-  LLabel := AGoogleResponse.&Label.Description;
-  URL := 'https://wordsapiv1.p.mashape.com/words/' + LWord + '/definitions';
+    Word:=AGoogleResponse.&Label.Description;
+  URL := 'https://en.wikipedia.org/w/api.php?format=json&action=query' +
+    '&prop=extracts&exintro=&explaintext=&titles=' + Word;
   Client := TNetHTTPClient.Create(nil);
   try
-    Client.CustomHeaders['X-Mashape-Key'] := API_KEY;
     Response := Client.Get(URL).ContentAsString(TEncoding.UTF8);
     ResponseJSON := TJSONObject.ParseJSONValue(Response) as TJSONObject;
-    Definitions := (ResponseJSON.Values['definitions'] as TJSONArray);
-
-    DefinitionList := TList<string>.Create;
-    for i := 0 to Definitions.Count - 1 do
-    begin
-      DefinitionObject := Definitions.Items[i] as TJSONObject;
-      Definition := DefinitionObject.Values['definition'].ToString;
-      DefinitionList.Add(Definition);
-    end;
+    Query := ResponseJSON.Values['query'] as TJSONObject;
+    Pages := Query.Values['pages'] as TJSONObject;
+    Page := Pages.Pairs[0].JsonValue as TJSONObject;
+    Definition := Page.Values['extract'].ToString;
 
     Result := TScenarioReturnData.Create;
-    Result.Title := 'This is ';
-    if UpCase(LWord[1]) in ['a','e','i','o','u'] then
-    begin
-      Result.Title := Result.Title + LWord + ',';
-    end;
-    Result.Content := 'It ';
-    case Definitions.Count of
-    0:    Result.Content := Result.Content + ' is ';
-    1:    Result.Content := Result.Content + '';
-    2..5: Result.Content := Result.Content + '';
-    else  Result.Content := Result.Content + '';
-    end;
-
-    {if Definitions.Count > 0 then
-    begin
-      Result.Content := 'I found ' + Definitions.Count.ToString +
-        ' definitions.';
-      Result.Content := Result.Content + 'One of them is the following: ';
-      Randomize;
-      Result.Content := Result.Content + LWord + ' is ' + DefinitionList.Items
-        [Random(DefinitionList.Count - 1)];
-    end
-    else
-    begin
-      Result.Content := 'I haven''t found any definitions.';
-    end;  }
+    Result.Title := Word;
+    Result.Content := Definition;
   finally
-    FreeAndNil(Client);
-    if Assigned(ResponseJSON) then
+     FreeAndNil(Client);
+     if Assigned(ResponseJSON) then
       FreeAndNil(ResponseJSON);
   end;
+end;
+
 end;
 
 initialization
