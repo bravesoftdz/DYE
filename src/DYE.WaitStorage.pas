@@ -8,12 +8,12 @@ uses DYE.Request.GoogleVision, DYE.Scenario, DYE.Request.AmazonLex, System.SyncO
 type
 
   TDYEWaitStorage = class
-    FEventType: TDYELexScenarioType;
+    FEventType: TDYEAmazonLexScenario;
     FGoogleVisionResponse: TDYEGoogleVisionResponse;
     CS: TCriticalSection;
   public
     constructor Create;
-    function SetEventType(AType: TDYELexScenarioType): TScenarioReturnData;
+    function SetEventType(AType: TDYEAmazonLexScenario): TScenarioReturnData;
     function SetGoogleVisionResponse(AResponse: TDYEGoogleVisionResponse): TScenarioReturnData;
     destructor Destroy; override;
   end;
@@ -37,7 +37,7 @@ begin
  FEventType := stNone;
 end;
 
-function TDYEWaitStorage.SetEventType(AType: TDYELexScenarioType): TScenarioReturnData;
+function TDYEWaitStorage.SetEventType(AType: TDYEAmazonLexScenario): TScenarioReturnData;
 var Scenario: IScenario;
 begin
   CS.Enter;

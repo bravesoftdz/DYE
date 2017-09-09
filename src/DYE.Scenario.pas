@@ -23,11 +23,11 @@ type
 
   TScenarioSelector = class
     private
-     FDict: TDictionary<TDYELexScenarioType,IScenario>;
+     FDict: TDictionary<TDYEAmazonLexScenario,IScenario>;
     public
      constructor Create;
-     function GiveScenario(ScenarioType: TDYELexScenarioType): IScenario;
-     procedure RegisterScenario(ScenarioType: TDYELexScenarioType; Scenario: IScenario);
+     function GiveScenario(ScenarioType: TDYEAmazonLexScenario): IScenario;
+     procedure RegisterScenario(ScenarioType: TDYEAmazonLexScenario; Scenario: IScenario);
      destructor Destroy; override;
   end;
 
@@ -65,15 +65,15 @@ end;
 
 constructor TScenarioSelector.Create;
 begin
-  FDict := TDictionary<TDYELexScenarioType,IScenario>.Create;
+  FDict := TDictionary<TDYEAmazonLexScenario,IScenario>.Create;
 end;
 
-function TScenarioSelector.GiveScenario(ScenarioType: TDYELexScenarioType): IScenario;
+function TScenarioSelector.GiveScenario(ScenarioType: TDYEAmazonLexScenario): IScenario;
 begin
   Result := FDict.Items[ScenarioType];
 end;
 
-procedure TScenarioSelector.RegisterScenario(ScenarioType: TDYELexScenarioType; Scenario: IScenario);
+procedure TScenarioSelector.RegisterScenario(ScenarioType: TDYEAmazonLexScenario; Scenario: IScenario);
 begin
   FDict.Add(ScenarioType,Scenario);
 end;

@@ -7,7 +7,8 @@ uses
   System.Classes,
   System.Net.HTTPClientComponent,
   System.JSON.Writers,
-  System.JSON.Readers;
+  System.JSON.Readers,
+  System.JSON.Types;
 
 type
   EDYEAmazonLexError = class(Exception);
@@ -22,9 +23,14 @@ type
     Url = Host + '/bot/' + Bot + '/alias/' + Alias + '/user/' + User + '/text';
   end;
 
+  TDYEAmazonLexScenario=(stPrice, stWTF, stNone);
+
   TDYEAmazonLexResponse = class
   private
+    FScenario: TDYEAmazonLexScenario;
   public
+    constructor Create(AScenario: TDYEAmazonLexScenario);
+    property Scenario: TDYEAmazonLexScenario read FScenario;
   end;
 
   TDYEAmazonLexRequest = class
@@ -61,8 +67,26 @@ end;
 
 function TDYEAmazonLexRequest.Process(
   AResponse: TStringStream): TDYEAmazonLexResponse;
+var
+  StreamReader: TStreamReader;
+  JsonReader: TJsonTextReader;
+  Scenario: TDYEAmazonLexScenario;
 begin
-
+  StreamReader := TStreamReader.Create(AResponse);
+  try
+    JsonReader := TJsonTextReader.Create(StreamReader);
+    try
+      while JsonReader.Read do
+      begin
+        
+      end;
+      FResponse := TDYEAmazonLexResponse.Create(stNone);
+    finally
+      JsonReader.Free;
+    end;
+  finally
+    StreamReader.Free;
+  end;
 end;
 
 function TDYEAmazonLexRequest.Request(AText: String): TStringStream;
@@ -106,6 +130,13 @@ begin
   finally
     Result.Position := 0;
   end;
+end;
+
+{ TDYEAmazonLexResponse }
+
+constructor TDYEAmazonLexResponse.Create(AScenario: TDYEAmazonLexScenario);
+begin
+  FScenario := AScenario;
 end;
 
 end.

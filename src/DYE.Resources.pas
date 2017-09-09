@@ -56,13 +56,13 @@ end;
 
 function TDYEResource.Voice([BodyParam] Data: string): String;
 var LexReq: TDYEAmazonLexRequest;
-    LexScenarioType: TDYELexScenarioType;
+    LexScenarioType: TDYEAmazonLexScenario;
     ScenarioResult: TScenarioReturnData;
 begin
   Writeln('Voice');
   try
-    LexReq := TDYEAmazonLexRequest.Create;
-    LexScenarioType := LexReq.DoRequest(Data);
+    LexReq := TDYEAmazonLexRequest.Create(Data);
+    LexScenarioType := LexReq.Response.Scenario;
     ScenarioResult := GlobalWaitStorage.SetEventType(LexScenarioType);
     if not Assigned(ScenarioResult) then
      Result := '{"empty":"true"}'

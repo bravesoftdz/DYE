@@ -247,11 +247,14 @@ begin
   if AScore >= 1.0 then
   begin
     FScore := 1;
-  end
-  else
-  begin
-    FScore := AScore;
+    Exit;
   end;
+  if AScore <= 0 then
+  begin
+    FScore := 0;
+    Exit;
+  end;
+  FScore := AScore;
 end;
 
 end.
