@@ -16,7 +16,7 @@ implementation
 
 function TDYEWTFScenario.DoScenario(AGoogleResponse: TDYEGoogleVisionResponse)
   : TScenarioReturnData;
-var Word: string;
+var LWord: string;
     URL: string;
     Client: TNetHTTPClient;
     Response: string;
@@ -30,13 +30,12 @@ var Word: string;
 begin
   if Assigned(AGoogleResponse.Logo) then
   begin
-    LLogo := AGoogleResponse.Logo.Description;
-    LWord := LLogo;
+    LWord := AGoogleResponse.Logo.Description;
   end
   else
-    Word:=AGoogleResponse.&Label.Description;
+    LWord:=AGoogleResponse.&Label.Description;
   URL := 'https://en.wikipedia.org/w/api.php?format=json&action=query' +
-    '&prop=extracts&exintro=&explaintext=&titles=' + Word;
+    '&prop=extracts&exintro=&explaintext=&titles=' + LWord;
   Client := TNetHTTPClient.Create(nil);
   try
     Response := Client.Get(URL).ContentAsString(TEncoding.UTF8);
@@ -47,15 +46,13 @@ begin
     Definition := Page.Values['extract'].ToString;
 
     Result := TScenarioReturnData.Create;
-    Result.Title := Word;
+    Result.Title := LWord;
     Result.Content := Definition;
   finally
      FreeAndNil(Client);
      if Assigned(ResponseJSON) then
       FreeAndNil(ResponseJSON);
   end;
-end;
-
 end;
 
 initialization
