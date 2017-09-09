@@ -42,10 +42,12 @@ var Scenario: IScenario;
 begin
   CS.Enter;
   try
+    Writeln('Save Event type');
     FEventType := AType;
     if Assigned(FGoogleVisionResponse) then
     begin
       Scenario := GlobalScenarioSelector.GiveScenario(FEventType);
+      Writeln('Execute scenario');
       Result := Scenario.DoScenario(FGoogleVisionResponse);
       FEventType := stNone;
       FreeAndNil(FGoogleVisionResponse);
@@ -62,10 +64,12 @@ var Scenario: IScenario;
 begin
   CS.Enter;
   try
+    Writeln('Save google response');
     FGoogleVisionResponse := AResponse;
     if FEventType <> stNone then
     begin
       Scenario := GlobalScenarioSelector.GiveScenario(FEventType);
+      Writeln('Execute scenario');
       Result := Scenario.DoScenario(FGoogleVisionResponse);
       FEventType := stNone;
       FreeAndNil(FGoogleVisionResponse);

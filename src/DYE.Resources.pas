@@ -37,6 +37,7 @@ var GVRequ: TDYEGoogleVisionRequest;
     GVResp: TDYEGoogleVisionResponse;
     ScenarioResult: TScenarioReturnData;
 begin
+    Writeln('Image');
    try
      GVRequ := TDYEGoogleVisionRequest.Create(Data);
      GVResp := GVRequ.Response;
@@ -45,10 +46,12 @@ begin
        Result := '{"empty":"true"}'
      else
      Result := ScenarioResult.ToString;
+     Writeln('Image result: ', Result);
    finally
      if Assigned(ScenarioResult) then
        FreeAndNil(ScenarioResult);
    end;
+   Writeln('Image end');
 end;
 
 function TDYEResource.Voice([BodyParam] Data: string): String;
@@ -56,6 +59,7 @@ var LexReq: TDYEAmazonLexRequest;
     LexScenarioType: TDYELexScenarioType;
     ScenarioResult: TScenarioReturnData;
 begin
+  Writeln('Voice');
   try
     LexReq := TDYEAmazonLexRequest.Create;
     LexScenarioType := LexReq.DoRequest(Data);
@@ -64,11 +68,13 @@ begin
      Result := '{"empty":"true"}'
     else
       Result := ScenarioResult.ToString;
+    Writeln('Voice result: ', Result);
   finally
      FreeAndNil(LexReq);
      if Assigned(ScenarioResult) then
        FreeAndNil(ScenarioResult);
   end;
+  Writeln('Voice end');
 end;
 
 initialization

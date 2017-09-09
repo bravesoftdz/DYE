@@ -45,9 +45,22 @@ begin
 end;
 
 function TScenarioReturnData.ToString: string;
+
+  function Prepare(ASrc: string): string;
+  var i: integer;
+  begin
+    Result := '';
+    for i:=0 to ASrc.Length-1 do
+    begin
+      Result := Result + Trim(Asrc[i]);
+      if Asrc[i]=' ' then
+        Result:=Result + ' ';
+    end;
+  end;
+
 begin
   Result :=
-    '{"title":"' + Title + '","content":"' + Content + '"}';
+    '{"title":"' + Title + '","content":' + Prepare(Content) + '"}';
 end;
 
 constructor TScenarioSelector.Create;
