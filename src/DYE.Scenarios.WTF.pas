@@ -39,6 +39,7 @@ begin
   Client := TNetHTTPClient.Create(nil);
   try
     Response := Client.Get(URL).ContentAsString(TEncoding.UTF8);
+    Writeln('Wiki queried');
     ResponseJSON := TJSONObject.ParseJSONValue(Response) as TJSONObject;
     Query := ResponseJSON.Values['query'] as TJSONObject;
     Pages := Query.Values['pages'] as TJSONObject;
