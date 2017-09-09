@@ -28,7 +28,8 @@ var LWord: string;
     DefinitionObject: TJSONObject;
     Definition: string;
 begin
-  if Assigned(AGoogleResponse.Logo) then
+  if Assigned(AGoogleResponse.Logo) and
+        (AGoogleResponse.Logo.Description.Trim<>'') then
   begin
     LWord := AGoogleResponse.Logo.Description;
   end
@@ -38,6 +39,7 @@ begin
     '&prop=extracts&exintro=&explaintext=&titles=' + LWord;
   Client := TNetHTTPClient.Create(nil);
   try
+    try
     Response := Client.Get(URL).ContentAsString(TEncoding.UTF8);
     Writeln('Wiki queried');
     ResponseJSON := TJSONObject.ParseJSONValue(Response) as TJSONObject;
@@ -49,6 +51,11 @@ begin
     Result := TScenarioReturnData.Create;
     Result.Title := LWord;
     Result.Content := Definition;
+    except
+      Result := TScenarioReturnData.Create;
+      Result.Title :=LWord;
+      Result.Content := '"NONE"';
+    end;
   finally
      FreeAndNil(Client);
      if Assigned(ResponseJSON) then
