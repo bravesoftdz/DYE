@@ -18,7 +18,7 @@ type
   TDYEGoogleVisionAPIData = packed record
   public const
     Host = 'https://vision.googleapis.com/v1/images:annotate';
-    Key = 'AIzaSyDlPE7zDiXzSRt-OQpeq-E3x8bXTFcV16c';
+    Key = //Key was removed and disabled;
     Url = Host + '?key=' + Key;
   end;
 
